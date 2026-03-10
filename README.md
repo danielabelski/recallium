@@ -7,7 +7,7 @@
 
 *Your digital developer twin—Because "Explain Our Setup Again" Gets Old Fast*
 
-[![Version](https://img.shields.io/badge/version-0.8.230-blue.svg)](https://github.com/recallium-ai/recallium)
+[![Version](https://img.shields.io/badge/version-0.8.285-blue.svg)](https://github.com/recallium-ai/recallium)
 [![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://hub.docker.com/r/recalliumai/recallium)
 [![License](https://img.shields.io/badge/license-Community-orange.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-compatible-purple.svg)](https://modelcontextprotocol.io)
@@ -92,7 +92,7 @@ docker compose --env-file recallium.env up -d
 - [Setup Wizard](#setup-wizard--provider-configuration)
 - [Web Dashboard](#web-dashboard)
 - [How It Works](#how-it-works) (with examples)
-- [What's New in v0.8.230](#whats-new-in-v08230)
+- [What's New in v0.8.285](#whats-new-in-v08285)
 - [Previous Releases](#previous-releases)
 - [Complete Feature Set](#complete-feature-set)
 - [16 MCP Tools](#16-mcp-tools)
@@ -562,7 +562,7 @@ Claude: "✓ Inactivated 47 Redis memories (soft delete, recoverable)
 
 ---
 
-## What's New in v0.8.230
+## What's New in v0.8.285
 
 ### **Palantir BYO-LLM Support**
 Bring your own LLM with Palantir Foundry AIP:
@@ -943,7 +943,7 @@ Your code. Your patterns. Your decisions.
 
 **Supported IDEs**: Cursor • Claude Desktop • Claude Code • VS Code • Windsurf • Roo Code • Visual Studio 2022 • JetBrains • Zed • Cline • BoltAI • Augment Code • Warp • Amazon Q • AntiGravity • and more...
 
-**Version 0.8.230** | Released February 2026 | [Installation Guide](install/README.md)
+**Version 0.8.285** | Released March 2026 | [Installation Guide](install/README.md)
 
 ---
 
