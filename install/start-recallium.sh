@@ -8,8 +8,9 @@
 #   2. recallium.env file in the same directory
 #
 # Usage:
-#   ./start-recallium.sh       # Uses current version (no git pull)
-#   ./start-recallium.sh 1     # Force pulls latest from git, then starts
+#   ./start-recallium.sh
+#
+# To update to latest version, run ./update-recallium.sh first
 # =============================================================================
 
 set -e
@@ -17,16 +18,6 @@ set -e
 # Get the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
-
-# Pull latest from git only if argument "1" is passed
-if [ "$1" = "1" ]; then
-    echo "[Recallium] Force pulling latest updates from git..."
-    git fetch --all && git reset --hard origin/main || {
-        echo "[Warning] Git pull failed. Continuing with current version..."
-    }
-else
-    echo "[Recallium] Using current version (pass '1' to force pull latest)..."
-fi
 
 ENV_FILE="recallium.env"
 IMAGE="recalliumai/recallium:latest"
