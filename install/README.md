@@ -24,7 +24,7 @@ Want to run completely free and private? **Use Ollama + built-in embeddings:**
 
 ```
 LLM: Ollama (Llama 3, Mistral, Qwen - runs locally)
-Embeddings: GTE-Large (built-in, no API needed)
+Embeddings: Nomic Embed v1.5 (built-in, 768D, no API needed)
 Cost: $0
 ```
 
@@ -298,10 +298,26 @@ Want to run completely free and private?
 
 ```
 LLM: Ollama (local models like Llama 3, Mistral)
-Embeddings: GTE-Large (built-in, runs locally)
+Embeddings: Nomic Embed v1.5 (built-in, 768D, runs locally)
 ```
 
 Just select Ollama in the setup wizard and ensure Ollama is running locally.
+
+### Multi-Dimension Embedding Support
+
+Recallium supports **multiple embedding models** with different dimensions. Switch models anytime without losing existing embeddings:
+
+| Model | Dimensions | Type | Notes |
+|-------|------------|------|-------|
+| **Nomic Embed v1.5** | 768 | Local | **Default** - ARM64 compatible |
+| **Snowflake Arctic** | 1024 | Local | No trust_remote_code needed |
+| **OpenAI text-embedding-3-small** | 1536 | API | Fast, cost-effective |
+| **OpenAI text-embedding-3-large** | 3072 | API | Highest quality |
+
+**How it works:**
+- Embeddings stored in dimension-specific columns (`embedding_768`, `embedding_1024`, etc.)
+- Change models via `recallium.env` → restart container
+- Old embeddings preserved—re-embed selectively via Web UI if needed
 
 ---
 
@@ -355,6 +371,32 @@ LLM_MODEL=llama3.2:3b           # Smaller, faster
 # or
 LLM_MODEL=gpt-oss:20b           # Larger, more accurate
 ```
+
+### Switch Embedding Model
+
+Recallium supports multiple embedding dimensions. **Switching models preserves existing embeddings**—they're stored in dimension-specific columns.
+
+```bash
+# Edit install/recallium.env
+
+# Option 1: Nomic (768D) - Default, ARM64 compatible
+EMBEDDING_MODEL=nomic-ai/nomic-embed-text-v1.5
+EMBEDDING_DIM=768
+
+# Option 2: Snowflake Arctic (1024D) - No trust_remote_code
+EMBEDDING_MODEL=Snowflake/snowflake-arctic-embed-l-v2.0
+EMBEDDING_DIM=1024
+
+# Option 3: OpenAI (requires API key in vault)
+# Configure via Web UI → Providers → Embedding
+```
+
+**After changing:**
+1. Restart container: `docker compose down && docker compose --env-file recallium.env up -d`
+2. New memories automatically use new model
+3. (Optional) Re-embed existing memories: Web UI → Admin → Re-embed
+
+**Important:** `EMBEDDING_DIM` must match your model's output dimensions.
 
 ### Adjust Document Chunk Size
 ```bash
@@ -729,6 +771,27 @@ Refer to your IDE's MCP documentation for exact configuration syntax.
 
 ## Management Commands
 
+### Using Helper Scripts (Recommended)
+
+```bash
+# Start/restart Recallium (pulls latest image)
+./start-recallium.sh          # Linux/macOS
+start-recallium.bat           # Windows
+
+# Update git repo (preserves your recallium.env)
+./update-recallium.sh         # Linux/macOS
+update-recallium.bat          # Windows
+
+# Reset everything - DELETES ALL DATA (with confirmation prompt)
+./reset-recallium.sh          # Linux/macOS
+reset-recallium.bat           # Windows
+
+# Export/backup all memories to timestamped zip file
+./download-memories.sh        # Linux/macOS
+```
+
+### Using Docker Compose Directly
+
 ```bash
 # View logs
 docker compose --env-file recallium.env logs -f
@@ -743,7 +806,7 @@ docker compose --env-file recallium.env restart
 docker compose --env-file recallium.env pull
 docker compose --env-file recallium.env up -d
 
-# Reset everything (deletes all data!)
+# Reset everything (deletes all data!) - NO CONFIRMATION
 docker compose down -v
 ```
 
@@ -947,7 +1010,7 @@ The `--pull always` flag forces Docker to pull the latest image from Docker Hub,
 ```bash
 # Remove old image completely and start fresh
 docker compose down
-docker rmi manujbawa/recallium:latest
+docker rmi recalliumai/recallium:latest
 docker compose --env-file recallium.env up -d
 ```
 

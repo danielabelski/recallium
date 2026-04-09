@@ -7,7 +7,7 @@
 
 *Your digital developer twin—Because "Explain Our Setup Again" Gets Old Fast*
 
-[![Version](https://img.shields.io/badge/version-0.8.285-blue.svg)](https://github.com/recallium-ai/recallium)
+[![Version](https://img.shields.io/badge/version-0.8.389-blue.svg)](https://github.com/recallium-ai/recallium)
 [![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://hub.docker.com/r/recalliumai/recallium)
 [![License](https://img.shields.io/badge/license-Community-orange.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-compatible-purple.svg)](https://modelcontextprotocol.io)
@@ -92,7 +92,7 @@ docker compose --env-file recallium.env up -d
 - [Setup Wizard](#setup-wizard--provider-configuration)
 - [Web Dashboard](#web-dashboard)
 - [How It Works](#how-it-works) (with examples)
-- [What's New in v0.8.285](#whats-new-in-v08285)
+- [What's New in v0.8.389](#whats-new-in-v08389)
 - [Previous Releases](#previous-releases)
 - [Complete Feature Set](#complete-feature-set)
 - [16 MCP Tools](#16-mcp-tools)
@@ -223,7 +223,7 @@ Want to run completely free and private?
 
 ```
 LLM: Ollama (local models like Llama 3, Mistral)
-Embeddings: GTE-Large (built-in, runs locally)
+Embeddings: Nomic Embed v1.5 (built-in, 768D, runs locally)
 ```
 
 ### Setup Wizard Features
@@ -237,12 +237,22 @@ Embeddings: GTE-Large (built-in, runs locally)
 - **Secure credential storage** — API keys stored in encrypted vault
 - **Hot reload** — Provider changes take effect immediately
 
-### Embedding (Free by Default)
+### Embeddings (Multi-Dimension Support)
 
-Recallium uses **GTE-Large** (1024 dimensions) for embeddings:
-- Runs locally on your machine
-- No API costs, no rate limits
+Recallium supports **multiple embedding models** with zero-downtime switching:
+
+| Model | Dimensions | Notes |
+|-------|------------|-------|
+| **Nomic Embed v1.5** | 768 | **Default** - Local, free, ARM64 compatible |
+| **Snowflake Arctic** | 1024 | Local, no trust_remote_code needed |
+| **OpenAI text-embedding-3-small** | 1536 | API, fast, cost-effective |
+| **OpenAI text-embedding-3-large** | 3072 | API, highest quality |
+
+**Key Features:**
+- Runs locally by default (no API costs)
 - Works on CPU, CUDA, or Apple Silicon (MPS)
+- **Switch models anytime**—embeddings stored in dimension-specific columns
+- Mix local and API models as requirements change
 
 ---
 
@@ -562,29 +572,41 @@ Claude: "✓ Inactivated 47 Redis memories (soft delete, recoverable)
 
 ---
 
-## What's New in v0.8.285
+## What's New in v0.8.389
 
-### **Palantir BYO-LLM Support**
-Bring your own LLM with Palantir Foundry AIP:
-- Palantir Foundry AIP now supported as a Bring-Your-Own-LLM provider
-- Seamlessly integrates with Recallium's multi-provider failover system
-- Works with your existing Palantir enterprise deployment
-
----
-
-### **Better Searches**
-Improved search accuracy and relevance:
-- Smarter hybrid search combining semantic, keyword, and tag matching
-- Faster results with reduced storage footprint
-- More accurate ranking for better discovery
+### **Multi-Dimension Embedding Architecture**
+Switch embedding models without data loss:
+- Dimension-specific columns: `embedding_768`, `embedding_1024`, `embedding_1536`, `embedding_3072`
+- Automatic routing based on active model dimension
+- Re-embed selectively via Web UI or keep mixed embeddings
+- Supports local (Nomic, Snowflake) and API (OpenAI) models
+- Zero-downtime model switching—old embeddings preserved
 
 ---
 
-### **Claude Desktop Extensions Support**
-Native support for Claude Desktop with Extensions:
-- One-click MCP connection at `http://localhost:8001/mcp`
-- Works with 60+ IDEs including VS Code, JetBrains, Neovim, and more
-- Seamless integration with Claude Desktop's new Extensions feature
+### **Project-Aware Search with Linked Project Discovery**
+Smarter search that understands project relationships:
+- Automatically discovers and searches linked projects
+- Respects project link types (parent, child, dependency, related)
+- Configurable search depth for project graph traversal
+
+---
+
+### **Improved Volume Permissions**
+Simplified Docker deployment:
+- Automatic volume permission fixing on startup
+- Works out-of-the-box on fresh installs
+- No manual chown commands needed
+
+---
+
+### **Previous: v0.8.285**
+
+**Palantir BYO-LLM Support** - Palantir Foundry AIP now supported as a Bring-Your-Own-LLM provider
+
+**Better Searches** - Smarter hybrid search combining semantic, keyword, and tag matching
+
+**Claude Desktop Extensions Support** - One-click MCP connection at `http://localhost:8001/mcp`
 
 ---
 
@@ -943,7 +965,7 @@ Your code. Your patterns. Your decisions.
 
 **Supported IDEs**: Cursor • Claude Desktop • Claude Code • VS Code • Windsurf • Roo Code • Visual Studio 2022 • JetBrains • Zed • Cline • BoltAI • Augment Code • Warp • Amazon Q • AntiGravity • and more...
 
-**Version 0.8.285** | Released March 2026 | [Installation Guide](install/README.md)
+**Version 0.8.389** | Released April 2026 | [Installation Guide](install/README.md)
 
 ---
 
