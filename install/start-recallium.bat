@@ -13,6 +13,11 @@ REM ============================================================================
 
 setlocal enabledelayedexpansion
 
+REM Get the directory where the script is located
+set SCRIPT_DIR=%~dp0
+REM Remove trailing backslash
+if "%SCRIPT_DIR:~-1%"=="\" set SCRIPT_DIR=%SCRIPT_DIR:~0,-1%
+
 set ENV_FILE=recallium.env
 set IMAGE=recalliumai/recallium:latest
 set CONTAINER_NAME=recallium
@@ -97,6 +102,7 @@ docker run -d ^
     --name %CONTAINER_NAME% ^
     --restart unless-stopped ^
     --env-file %ENV_FILE% ^
+    -e "RECALLIUM_INSTALL_PATH=%SCRIPT_DIR%" ^
     -p %HOST_API_PORT%:8000 ^
     -p %HOST_UI_PORT%:9000 ^
     -p %HOST_POSTGRES_PORT%:5432 ^

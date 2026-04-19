@@ -81,6 +81,7 @@ docker run -d \
     --name "$CONTAINER_NAME" \
     --restart unless-stopped \
     --env-file "$ENV_FILE" \
+    -e "RECALLIUM_INSTALL_PATH=${SCRIPT_DIR}" \
     -p "${API_PORT}:8000" \
     -p "${UI_PORT}:9000" \
     -p "${DB_PORT}:5432" \
