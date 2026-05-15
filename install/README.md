@@ -447,7 +447,9 @@ Recallium supports two connection methods:
 
 ### HTTP-Capable IDEs (Recommended - No npm Client)
 
-These IDEs connect directly to `http://localhost:8001/mcp`:
+These IDEs connect directly to `http://localhost:8001/mcp`.
+
+> **macOS note:** A few clients (most notably **Claude Desktop**) do not reliably resolve `localhost` for HTTP MCP connectors on macOS. If a client cannot connect to `http://localhost:8001/mcp`, replace `localhost` with `127.0.0.1` (i.e. `http://127.0.0.1:8001/mcp`). Most IDEs work fine with `localhost` — use `127.0.0.1` as a fallback when you see connection failures.
 
 <details>
 <summary><b>Install in Cursor</b></summary>
@@ -742,28 +744,32 @@ Refer to your IDE's MCP documentation for exact configuration syntax.
 <details>
 <summary><b>Install in Claude Desktop</b></summary>
 
-**Steps to Configure:**
+> **macOS users:** Claude Desktop on macOS does not reliably resolve `localhost` for HTTP MCP connectors. Use `http://127.0.0.1:8001/mcp` instead. On Windows and Linux, `http://localhost:8001/mcp` works as expected.
 
-1. **Download the JSONB extension file** from the Recallium release or create one with the Recallium MCP configuration
+**Recommended: Add as a Custom Connector**
 
-2. **Install as Extension:**
-   - Open Claude Desktop
-   - Go to **Settings → Extensions**
-   - Click **Browse Extensions**
-   - Click **Add Custom**
-   - Browse to and select the `.jsonb` file to install
+1. Open Claude Desktop
+2. Go to **Settings → Connectors → Add custom connector**
+3. Name: `recallium`
+4. URL:
+   - macOS: `http://127.0.0.1:8001/mcp`
+   - Windows / Linux: `http://localhost:8001/mcp`
+5. Save, then enable the connector and the tools you want to expose
 
-3. **Enable Recallium tools:**
-   - After installation, go to **Connectors → Recallium**
-   - Enable each tool you want to use
-
-4. **Verify connection:**
-   - Try using a Recallium tool (e.g., `get_rules` with `project_name: "__global__"`)
-   - Check Claude Desktop logs if tools don't appear
+**Verification:**
+- Start a new chat and ask: *"List available recallium tools"*
+- Tools such as `store_memory`, `search_memories`, and `get_rules` should appear
+- Quick smoke test: invoke `get_rules` with `project_name: "__global__"`
 
 **Troubleshooting:**
-- If tools don't appear, verify the Docker container is running: `docker ps -f name=recallium`
-- Check Claude Desktop logs for detailed error messages
+- Container running? `docker ps -f name=recallium`
+- Endpoint reachable? `curl http://127.0.0.1:8001/health`
+- Endpoint speaks MCP? `curl http://127.0.0.1:8001/mcp/status`
+- Check Claude Desktop logs for detailed errors:
+  - macOS: `~/Library/Logs/Claude/`
+  - Windows: `%APPDATA%\Claude\logs\`
+- If tools still don't appear after a connector edit, fully quit and relaunch Claude Desktop (not just close the window)
+- If you changed `HOST_API_PORT` in `recallium.env`, update the port in the connector URL
 
 </details>
 
